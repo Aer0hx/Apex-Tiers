@@ -116,11 +116,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // ===== Tier grouping for column view =====
 const TIER_GROUPS = [
-    { label: 'Tier 1', tiers: ['HT1'], headerClass: 'tier-1-header', trophy: 'tier_icons/overall.svg' },
-    { label: 'Tier 2', tiers: ['HT2', 'HT3'], headerClass: 'tier-2-header', trophy: 'tier_icons/overall.svg' },
-    { label: 'Tier 3', tiers: ['HT4', 'HT5'], headerClass: 'tier-3-header', trophy: 'tier_icons/overall.svg' },
-    { label: 'Tier 4', tiers: ['LT1', 'LT2', 'LT3'], headerClass: 'tier-4-header', trophy: null },
-    { label: 'Tier 5', tiers: ['LT4', 'LT5'], headerClass: 'tier-5-header', trophy: null }
+    { label: 'Tier 1', tiers: ['HT1', 'LT1'], headerClass: 'tier-1-header', trophy: 'tier_icons/overall.svg' },
+    { label: 'Tier 2', tiers: ['HT2', 'LT2'], headerClass: 'tier-2-header', trophy: 'tier_icons/overall.svg' },
+    { label: 'Tier 3', tiers: ['HT3', 'LT3'], headerClass: 'tier-3-header', trophy: 'tier_icons/overall.svg' },
+    { label: 'Tier 4', tiers: ['HT4', 'LT4'], headerClass: 'tier-4-header', trophy: null },
+    { label: 'Tier 5', tiers: ['HT5', 'LT5'], headerClass: 'tier-5-header', trophy: null }
 ];
 
 // ===== Main Render — switches between ranking table and tier columns =====
