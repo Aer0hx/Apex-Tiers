@@ -20,8 +20,8 @@ const TITLES = {
 };
 
 const TIER_POINTS = {
-    'HT1': 250, 'HT2': 200, 'HT3': 150, 'HT4': 100, 'HT5': 70,
-    'LT1': 30,  'LT2': 20,  'LT3': 12,  'LT4': 6,   'LT5': 2, '-': 0
+    'HT1': 100, 'HT2': 85, 'HT3': 70, 'HT4': 55, 'HT5': 40,
+    'LT1': 30, 'LT2': 20, 'LT3': 15, 'LT4': 10, 'LT5': 5, '-': 0
 };
 
 // ===== Firebase & Player Data =====
@@ -477,19 +477,12 @@ function savePlayer(e) {
         mace: document.getElementById('pMace').value
     };
 
-    // Puanları otomatik hesapla
-    let calculatedPoints = 0;
-    for (let key in tiersObj) {
-        const t = tiersObj[key];
-        if (t !== '-' && TIER_POINTS[t]) {
-            calculatedPoints += TIER_POINTS[t];
-        }
-    }
+    // Puanlar artık adminden elle giriliyor
     
     const newPlayer = {
         name: document.getElementById('pName').value,
         title: document.getElementById('pTitle').value,
-        points: calculatedPoints, // Artık otomatik hesaplanıyor
+        points: parseInt(document.getElementById('pPoints').value) || 0,
         region: document.getElementById('pRegion').value,
         tiers: tiersObj
     };
