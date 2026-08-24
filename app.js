@@ -20,8 +20,12 @@ const TITLES = {
 };
 
 const TIER_POINTS = {
-    'HT1': 100, 'HT2': 85, 'HT3': 70, 'HT4': 55, 'HT5': 40,
-    'LT1': 30, 'LT2': 20, 'LT3': 15, 'LT4': 10, 'LT5': 5, '-': 0
+    'HT1': 100, 'LT1': 100, // Tier 1
+    'HT2': 80,  'LT2': 80,  // Tier 2
+    'HT3': 60,  'LT3': 60,  // Tier 3
+    'HT4': 40,  'LT4': 40,  // Tier 4
+    'HT5': 20,  'LT5': 20,  // Tier 5
+    '-': 0
 };
 
 // ===== Firebase & Player Data =====
@@ -477,12 +481,19 @@ function savePlayer(e) {
         mace: document.getElementById('pMace').value
     };
 
-    // Puanlar artık adminden elle giriliyor
+    // Puanları otomatik hesapla (Yeni Tier mantığına göre)
+    let calculatedPoints = 0;
+    for (let key in tiersObj) {
+        const t = tiersObj[key];
+        if (t !== '-' && TIER_POINTS[t]) {
+            calculatedPoints += TIER_POINTS[t];
+        }
+    }
     
     const newPlayer = {
         name: document.getElementById('pName').value,
         title: document.getElementById('pTitle').value,
-        points: parseInt(document.getElementById('pPoints').value) || 0,
+        points: calculatedPoints, // Artık otomatik hesaplanıyor
         region: document.getElementById('pRegion').value,
         tiers: tiersObj
     };
