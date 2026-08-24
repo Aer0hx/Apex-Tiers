@@ -19,10 +19,9 @@ const TITLES = {
     adept: { name: 'Combat Adept', class: 'adept' }
 };
 
-// ===== Tier Point Values =====
 const TIER_POINTS = {
-    'HT1': 100, 'HT2': 85, 'HT3': 70, 'HT4': 55, 'HT5': 40,
-    'LT1': 30, 'LT2': 20, 'LT3': 15, 'LT4': 10, 'LT5': 5, '-': 0
+    'HT1': 250, 'HT2': 200, 'HT3': 150, 'HT4': 100, 'HT5': 70,
+    'LT1': 30,  'LT2': 20,  'LT3': 12,  'LT4': 6,   'LT5': 2, '-': 0
 };
 
 // ===== Firebase & Player Data =====
