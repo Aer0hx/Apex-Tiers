@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TWLD TIERS - Rankings</title>
+    <meta name="description" content="Minecraft'ın en iyi PvP oyuncularını görüntüle!">
+    <meta name="theme-color" content="#ff0000">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ==================== LANDING SCREEN ==================== -->
+    <div id="landingScreen" class="landing-screen">
+        <div class="landing-content">
+            <div class="landing-logo">TWLD TIERS</div>
+            <p class="landing-sub">Minecraft PvP Tier List</p>
+            <div class="landing-buttons">
+                <button class="landing-btn landing-btn-player" onclick="enterAsPlayer()">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    <span>Oyuncu</span>
+                </button>
+                <button class="landing-btn landing-btn-admin" onclick="showAdminLogin()">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                    <span>Admin</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN LOGIN ==================== -->
+    <div id="adminLoginScreen" class="admin-login-screen" style="display:none">
+        <div class="admin-login-card">
+            <button class="back-btn" onclick="backToLanding()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                Geri
+            </button>
+            <div class="admin-login-header">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="#ef4444"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                <h2>Admin Girişi</h2>
+            </div>
+            <form onsubmit="adminLogin(event)">
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" id="loginUsername" placeholder="Kullanıcı adınız..." required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" id="loginPassword" placeholder="Şifreniz..." required>
+                </div>
+                <div id="loginError" class="login-error" style="display:none">
+                    Kullanıcı adı veya şifre yanlış!
+                </div>
+                <button type="submit" class="login-submit-btn">Giriş Yap</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN PANEL ==================== -->
+    <div id="adminPanel" class="admin-panel" style="display:none">
+        <header class="admin-header">
+            <div class="admin-header-left">
+                <span class="logo-text">TWLD TIERS</span>
+                <span class="admin-badge">ADMIN</span>
+            </div>
+            <div class="admin-header-right">
+                <span class="admin-user">👤 <span id="adminUsername"></span></span>
+                <button class="admin-logout-btn" onclick="adminLogout()">Çıkış Yap</button>
+            </div>
+        </header>
+        <main class="admin-main">
+            <div class="admin-toolbar">
+                <h1>Oyuncu Yönetimi</h1>
+                <button class="admin-add-btn" onclick="openAddPlayerModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    Oyuncu Ekle
+                </button>
+            </div>
+            <div class="admin-table-wrap">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Oyuncu</th>
+                            <th>Ünvan</th>
+                            <th>Puan</th>
+                            <th>Region</th>
+                            <th>Vanilla</th>
+                            <th>UHC</th>
+                            <th>Pot</th>
+                            <th>NethOP</th>
+                            <th>SMP</th>
+                            <th>Sword</th>
+                            <th>Axe</th>
+                            <th>Mace</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminPlayerList"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== ADD/EDIT PLAYER MODAL ==================== -->
+    <div class="modal-overlay" id="playerModal" onclick="closePlayerModal(event)">
+        <div class="modal-content player-modal-content">
+            <h2 id="playerModalTitle">Oyuncu Ekle</h2>
+            <form onsubmit="savePlayer(event)">
+                <input type="hidden" id="editIndex" value="-1">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Oyuncu Adı</label>
+                        <input type="text" id="pName" placeholder="Minecraft kullanıcı adı" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Puan</label>
+                        <input type="number" id="pPoints" placeholder="800" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ünvan</label>
+                        <select id="pTitle">
+                            <option value="grandmaster">Combat Grandmaster</option>
+                            <option value="master">Combat Master</option>
+                            <option value="ace">Combat Ace</option>
+                            <option value="expert">Combat Expert</option>
+                            <option value="adept">Combat Adept</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Region</label>
+                        <select id="pRegion">
+                            <option value="NA">NA</option>
+                            <option value="EU">EU</option>
+                            <option value="AS">AS</option>
+                            <option value="SA">SA</option>
+                            <option value="OC">OC</option>
+                        </select>
+                    </div>
+                </div>
+                <h3 class="tier-edit-title">Tier Ayarları</h3>
+                <div class="tier-edit-grid">
+                    <div class="form-group">
+                        <label>Vanilla</label>
+                        <select id="pVanilla"><option value="-">-</option><option value="HT1">HT1</option><option value="HT2">HT2</option><option value="HT3">HT3</option><option value="HT4">HT4</option><option value="HT5">HT5</option><option value="LT1">LT1</option><option value="LT2">LT2</option><option value="LT3">LT3</option><option value="LT4">LT4</option><option value="LT5">LT5</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>UHC</label>
+                        <select id="pUhc"><option value="-">-</option><option value="HT1">HT1</option><option value="HT2">HT2</option><option value="HT3">HT3</option><option value="HT4">HT4</option><option value="HT5">HT5</option><option value="LT1">LT1</option><option value="LT2">LT2</option><option value="LT3">LT3</option><option value="LT4">LT4</option><option value="LT5">LT5</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pot</label>
+                        <select id="pPot"><option value="-">-</option><option value="HT1">HT1</option><option value="HT2">HT2</option><option value="HT3">HT3</option><option value="HT4">HT4</option><option value="HT5">HT5</option><option value="LT1">LT1</option><option value="LT2">LT2</option><option value="LT3">LT3</option><option value="LT4">LT4</option><option value="LT5">LT5</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>NethOP</label>
+                        <select id="pNethop"><option value="-">-</option><option value="HT1">HT1</option><option value="HT2">HT2</option><option value="HT3">HT3</option><option value="HT4">HT4</option><option value="HT5">HT5</option><option value="LT1">LT1</option><option value="LT2">LT2</option><option value="LT3">LT3</option><option value="LT4">LT4</option><option value="LT5">LT5</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>SMP</label>
+                        <select id="pSmp"><option value="-">-</option><option value="HT1">HT1</option><option value="HT2">HT2</option><option value="HT3">HT3</option><option value="HT4">HT4</option><option value="HT5">HT5</option><option value="LT1">LT1</option><option value="LT2">LT2</option><option value="LT3">LT3</option><option value="LT4">LT4</option><option value="LT5">LT5</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sword</label>
+                        <select id="pSword"><option value="-">-</option><option value="HT1">HT1</option><option value="HT2">HT2</option><option value="HT3">HT3</option><option value="HT4">HT4</option><option value="HT5">HT5</option><option value="LT1">LT1</option><option value="LT2">LT2</option><option value="LT3">LT3</option><option value="LT4">LT4</option><option value="LT5">LT5</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Axe</label>
+                        <select id="pAxe"><option value="-">-</option><option value="HT1">HT1</option><option value="HT2">HT2</option><option value="HT3">HT3</option><option value="HT4">HT4</option><option value="HT5">HT5</option><option value="LT1">LT1</option><option value="LT2">LT2</option><option value="LT3">LT3</option><option value="LT4">LT4</option><option value="LT5">LT5</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mace</label>
+                        <select id="pMace"><option value="-">-</option><option value="HT1">HT1</option><option value="HT2">HT2</option><option value="HT3">HT3</option><option value="HT4">HT4</option><option value="HT5">HT5</option><option value="LT1">LT1</option><option value="LT2">LT2</option><option value="LT3">LT3</option><option value="LT4">LT4</option><option value="LT5">LT5</option></select>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="modal-cancel" onclick="closePlayerModalDirect()">İptal</button>
+                    <button type="submit" class="modal-save">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN SITE (hidden initially) ==================== -->
+    <div id="mainSite" style="display:none">
+        <!-- Navbar -->
+        <header class="navbar" id="navbar">
+            <nav>
+                <div class="nav-logo">
+                    <a href="/" onclick="event.preventDefault(); backToLanding();">
+                        <span class="logo-text">TWLD TIERS</span>
+                    </a>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" class="nav-link muted"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Home</a></li>
+                    <li><a href="#" class="nav-link active"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>Rankings</a></li>
+                    <li><a href="https://discord.gg/sNN63C2v4" target="_blank" class="nav-link"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019"/></svg>Discord</a></li>
+                </ul>
+                <div class="nav-search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="search-icon"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"/></svg>
+                    <input type="text" placeholder="Search player..." id="searchInput">
+                    <kbd>/</kbd>
+                </div>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg></button>
+            </nav>
+        </header>
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#" class="mobile-link muted">Home</a>
+            <a href="#" class="mobile-link active">Rankings</a>
+            <a href="https://discord.gg/sNN63C2v4" target="_blank" class="mobile-link">Discord</a>
+            <div class="mobile-search"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"/></svg><input type="text" placeholder="Search player..." id="mobileSearchInput"></div>
+        </div>
+        <main>
+            <div class="content-card">
+                <section class="category-tabs" id="categoryTabs">
+                    <a href="#" class="tab active" data-category="overall" onclick="switchTab(event, 'overall')"><img src="tier_icons/overall.svg" width="30" height="30" alt="Overall" class="tab-icon"><strong>Overall</strong><span class="tab-underline"></span></a>
+                    <a href="#" class="tab" data-category="ltm" onclick="switchTab(event, 'ltm')"><img src="tier_icons/2v2.svg" width="30" height="30" alt="LTMs" class="tab-icon"><strong>LTMs</strong></a>
+                    <a href="#" class="tab" data-category="vanilla" onclick="switchTab(event, 'vanilla')"><img src="tier_icons/vanilla.svg" width="30" height="30" alt="Vanilla" class="tab-icon"><strong>Vanilla</strong></a>
+                    <a href="#" class="tab" data-category="uhc" onclick="switchTab(event, 'uhc')"><img src="tier_icons/uhc.svg" width="30" height="30" alt="UHC" class="tab-icon"><strong>UHC</strong></a>
+                    <a href="#" class="tab" data-category="pot" onclick="switchTab(event, 'pot')"><img src="tier_icons/pot.svg" width="30" height="30" alt="Pot" class="tab-icon"><strong>Pot</strong></a>
+                    <a href="#" class="tab" data-category="nethop" onclick="switchTab(event, 'nethop')"><img src="tier_icons/nethop.svg" width="30" height="30" alt="NethOP" class="tab-icon"><strong>NethOP</strong></a>
+                    <a href="#" class="tab" data-category="smp" onclick="switchTab(event, 'smp')"><img src="tier_icons/smp.svg" width="30" height="30" alt="SMP" class="tab-icon"><strong>SMP</strong></a>
+                    <a href="#" class="tab" data-category="sword" onclick="switchTab(event, 'sword')"><img src="tier_icons/sword.svg" width="30" height="30" alt="Sword" class="tab-icon"><strong>Sword</strong></a>
+                    <a href="#" class="tab" data-category="axe" onclick="switchTab(event, 'axe')"><img src="tier_icons/axe.svg" width="30" height="30" alt="Axe" class="tab-icon"><strong>Axe</strong></a>
+                    <a href="#" class="tab" data-category="mace" onclick="switchTab(event, 'mace')"><img src="tier_icons/mace.svg" width="30" height="30" alt="Mace" class="tab-icon"><strong>Mace</strong></a>
+                </section>
+                <div class="info-bar">
+                    <button class="info-btn" onclick="toggleInfoModal()"><svg width="16" height="16" viewBox="0 0 512 512" fill="currentColor"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336l24 0 0-64-24 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24l0 88 8 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>Information</button>
+                    <div class="server-info">
+                        <div class="server-logo"><span class="server-logo-text">TWLD</span></div>
+                        <div class="server-details">
+                            <span class="server-label">SERVER IP</span>
+                            <div class="server-ip-row">
+                                <span class="server-ip">play.twld.net</span>
+                                <button class="copy-btn" onclick="copyIP()" title="Copy IP"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/></svg></button>
+                                <a href="https://discord.gg/sNN63C2v4" target="_blank" class="discord-link" title="Discord"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019"/></svg></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-header desktop-only"><span class="col-rank">#</span><span class="col-player">PLAYER</span><span class="col-region">REGION</span><span class="col-tiers">TIERS</span></div>
+                <div class="table-header mobile-only"><span class="col-rank">#</span><span class="col-player">PLAYER</span><span class="col-region-mobile">REGION</span></div>
+                <div id="playerList" class="player-list"></div>
+                <div id="loadingState" class="loading-state"><div class="spinner"></div><span>Loading players...</span></div>
+                <div id="noResults" class="no-results" style="display:none"><span>No players found.</span></div>
+            </div>
+        </main>
+        <div class="modal-overlay" id="infoModal" onclick="closeInfoModal(event)">
+            <div class="modal-content">
+                <h2>Tier System Information</h2>
+                <div class="tier-info-grid">
+                    <div class="tier-info-section"><h3>High Tiers (HT)</h3><div class="tier-example"><span class="tier-badge tier-ht1">HT1</span> Elite</div><div class="tier-example"><span class="tier-badge tier-ht2">HT2</span> Expert</div><div class="tier-example"><span class="tier-badge tier-ht3">HT3</span> Advanced</div><div class="tier-example"><span class="tier-badge tier-ht4">HT4</span> Skilled</div><div class="tier-example"><span class="tier-badge tier-ht5">HT5</span> Competent</div></div>
+                    <div class="tier-info-section"><h3>Low Tiers (LT)</h3><div class="tier-example"><span class="tier-badge tier-lt1">LT1</span> Above Average</div><div class="tier-example"><span class="tier-badge tier-lt2">LT2</span> Average</div><div class="tier-example"><span class="tier-badge tier-lt3">LT3</span> Below Average</div><div class="tier-example"><span class="tier-badge tier-lt4">LT4</span> Beginner</div><div class="tier-example"><span class="tier-badge tier-lt5">LT5</span> Newcomer</div></div>
+                </div>
+                <button class="modal-close" onclick="toggleInfoModal()">Close</button>
+            </div>
+        </div>
+        <footer><div class="footer-text">Copyrights © Twld Tiers 2025</div></footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
