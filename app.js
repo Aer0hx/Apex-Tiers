@@ -466,21 +466,33 @@ function savePlayer(e) {
     e.preventDefault();
     const index = parseInt(document.getElementById('editIndex').value);
     
+    // Tiers object'ini oluştur
+    const tiersObj = {
+        vanilla: document.getElementById('pVanilla').value,
+        uhc: document.getElementById('pUhc').value,
+        pot: document.getElementById('pPot').value,
+        nethop: document.getElementById('pNethop').value,
+        smp: document.getElementById('pSmp').value,
+        sword: document.getElementById('pSword').value,
+        axe: document.getElementById('pAxe').value,
+        mace: document.getElementById('pMace').value
+    };
+
+    // Puanları otomatik hesapla
+    let calculatedPoints = 0;
+    for (let key in tiersObj) {
+        const t = tiersObj[key];
+        if (t !== '-' && TIER_POINTS[t]) {
+            calculatedPoints += TIER_POINTS[t];
+        }
+    }
+    
     const newPlayer = {
         name: document.getElementById('pName').value,
         title: document.getElementById('pTitle').value,
-        points: parseInt(document.getElementById('pPoints').value) || 0,
+        points: calculatedPoints, // Artık otomatik hesaplanıyor
         region: document.getElementById('pRegion').value,
-        tiers: {
-            vanilla: document.getElementById('pVanilla').value,
-            uhc: document.getElementById('pUhc').value,
-            pot: document.getElementById('pPot').value,
-            nethop: document.getElementById('pNethop').value,
-            smp: document.getElementById('pSmp').value,
-            sword: document.getElementById('pSword').value,
-            axe: document.getElementById('pAxe').value,
-            mace: document.getElementById('pMace').value
-        }
+        tiers: tiersObj
     };
     
     // Clean up empty tiers
