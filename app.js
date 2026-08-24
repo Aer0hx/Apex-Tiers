@@ -25,8 +25,10 @@ const TIER_POINTS = {
     'LT1': 30, 'LT2': 20, 'LT3': 15, 'LT4': 10, 'LT5': 5, '-': 0
 };
 
-// ===== Player Data =====
-let PLAYERS = JSON.parse(localStorage.getItem('twld_players_v2')) || [
+// ===== Firebase & Player Data =====
+const DB_URL = "https://twld-tiers-default-rtdb.firebaseio.com/players.json";
+
+const DEFAULT_PLAYERS = [
     {
         name: 'Aer0hxx',
         title: 'grandmaster',
@@ -57,12 +59,29 @@ let PLAYERS = JSON.parse(localStorage.getItem('twld_players_v2')) || [
     }
 ];
 
+let PLAYERS = [];
+
 // ===== State =====
 let currentCategory = 'overall';
 let searchQuery = '';
 
 // ===== Initialize =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch(DB_URL);
+        const data = await response.json();
+        if (data && Array.isArray(data)) {
+            PLAYERS = data;
+        } else {
+            PLAYERS = DEFAULT_PLAYERS;
+            // İlk kez açılıyorsa veritabanını varsayılan listeyle doldur
+            fetch(DB_URL, { method: 'PUT', body: JSON.stringify(PLAYERS) });
+        }
+    } catch (error) {
+        console.error("Firebase'den veri çekilemedi:", error);
+        PLAYERS = DEFAULT_PLAYERS;
+    }
+
     setTimeout(() => {
         document.getElementById('loadingState').style.display = 'none';
         renderView();
@@ -475,8 +494,8 @@ function savePlayer(e) {
         PLAYERS[index] = newPlayer; // Update existing
     }
     
-    // Save to localStorage
-    localStorage.setItem('twld_players_v2', JSON.stringify(PLAYERS));
+    // Save to Firebase
+    fetch(DB_URL, { method: 'PUT', body: JSON.stringify(PLAYERS) });
     
     closePlayerModalDirect();
     renderAdminTable();
@@ -486,7 +505,8 @@ function savePlayer(e) {
 function deletePlayer(index) {
     if (confirm(PLAYERS[index].name + ' adlı oyuncuyu silmek istediğinize emin misiniz?')) {
         PLAYERS.splice(index, 1);
-        localStorage.setItem('twld_players_v2', JSON.stringify(PLAYERS));
+        // Save to Firebase
+        fetch(DB_URL, { method: 'PUT', body: JSON.stringify(PLAYERS) });
         renderAdminTable();
         renderView(); // Update main site
     }
