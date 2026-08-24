@@ -25,77 +25,35 @@ const TIER_POINTS = {
     'LT1': 30, 'LT2': 20, 'LT3': 15, 'LT4': 10, 'LT5': 5, '-': 0
 };
 
-// ===== Player Data — 10 test players, all HT1 =====
-let PLAYERS = JSON.parse(localStorage.getItem('twld_players')) || [
+// ===== Player Data =====
+let PLAYERS = JSON.parse(localStorage.getItem('twld_players_v2')) || [
     {
-        name: 'test1',
+        name: 'Aer0hxx',
         title: 'grandmaster',
-        points: 800,
-        region: 'NA',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
-    },
-    {
-        name: 'test2',
-        title: 'grandmaster',
-        points: 800,
+        points: 755,
         region: 'EU',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
+        tiers: { vanilla: 'LT3', uhc: 'LT4', pot: 'HT5', nethop: 'HT4', smp: 'LT4', sword: 'LT3', axe: 'HT4', mace: 'LT3' }
     },
     {
-        name: 'test3',
-        title: 'grandmaster',
-        points: 800,
-        region: 'NA',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
-    },
-    {
-        name: 'test4',
-        title: 'grandmaster',
-        points: 800,
+        name: 'Supgreat',
+        title: 'adept',
+        points: 230,
         region: 'EU',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
+        tiers: { uhc: 'HT5', axe: 'LT4' }
     },
     {
-        name: 'test5',
-        title: 'grandmaster',
-        points: 800,
-        region: 'AS',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
-    },
-    {
-        name: 'test6',
-        title: 'grandmaster',
-        points: 800,
-        region: 'NA',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
-    },
-    {
-        name: 'test7',
-        title: 'grandmaster',
-        points: 800,
+        name: 'Sozuqadam',
+        title: 'adept',
+        points: 220,
         region: 'EU',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
+        tiers: { uhc: 'LT5', nethop: 'LT4', sword: 'HT5', axe: 'LT4', mace: 'LT5' }
     },
     {
-        name: 'test8',
-        title: 'grandmaster',
-        points: 800,
-        region: 'NA',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
-    },
-    {
-        name: 'test9',
-        title: 'grandmaster',
-        points: 800,
-        region: 'AS',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
-    },
-    {
-        name: 'test10',
-        title: 'grandmaster',
-        points: 800,
+        name: 'Teentytryt1646',
+        title: 'adept',
+        points: 190,
         region: 'EU',
-        tiers: { vanilla: 'HT1', uhc: 'HT1', pot: 'HT1', nethop: 'HT1', smp: 'HT1', sword: 'HT1', axe: 'HT1', mace: 'HT1' }
+        tiers: { axe: 'HT4' }
     }
 ];
 
@@ -518,7 +476,7 @@ function savePlayer(e) {
     }
     
     // Save to localStorage
-    localStorage.setItem('twld_players', JSON.stringify(PLAYERS));
+    localStorage.setItem('twld_players_v2', JSON.stringify(PLAYERS));
     
     closePlayerModalDirect();
     renderAdminTable();
@@ -528,7 +486,7 @@ function savePlayer(e) {
 function deletePlayer(index) {
     if (confirm(PLAYERS[index].name + ' adlı oyuncuyu silmek istediğinize emin misiniz?')) {
         PLAYERS.splice(index, 1);
-        localStorage.setItem('twld_players', JSON.stringify(PLAYERS));
+        localStorage.setItem('twld_players_v2', JSON.stringify(PLAYERS));
         renderAdminTable();
         renderView(); // Update main site
     }
