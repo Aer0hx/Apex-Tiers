@@ -377,7 +377,11 @@ function adminLogin(e) {
     const user = document.getElementById('loginUsername').value;
     const pass = document.getElementById('loginPassword').value;
 
-    if (user === 'Aer0hx' && pass === '110219231213.fsdi!') {
+    const isAdmin1 = (user === 'Aer0hx' && pass === '110219231213.fsdi!');
+    const isAdmin2 = (user === 'Teentytr1646' && pass === 'Teentipeak1545');
+    const isAdmin3 = (user === 'Supgreat' && pass === 'Supgreat(çorba)8252');
+
+    if (isAdmin1 || isAdmin2 || isAdmin3) {
         document.getElementById('adminLoginScreen').style.display = 'none';
         document.getElementById('adminPanel').style.display = 'block';
         document.getElementById('adminUsername').innerText = user;
